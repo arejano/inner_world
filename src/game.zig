@@ -12,6 +12,7 @@ const SystemManager = @import("systems/system_manager.zig");
 const CameraSystem = @import("systems/camera_system.zig");
 const MovementSystem = @import("systems/movement_system.zig");
 const RenderSystem = @import("systems/render_system.zig");
+const MouseInputSystem = @import("systems/mouseinput_system.zig");
 
 const Self = @This();
 
@@ -46,6 +47,9 @@ pub fn init(allocator: std.mem.Allocator) !Self {
     //Start Render Systems
     const render_system = try RenderSystem.create(allocator);
     try render_system_manager.add(render_system.system(), "RenderSystem");
+
+    const mouseinput_system = try MouseInputSystem.create(allocator);
+    try system_manager.add(mouseinput_system.system(), "MouseSystem");
 
     system_manager.start(&world);
 

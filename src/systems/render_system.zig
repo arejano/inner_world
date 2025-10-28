@@ -1,17 +1,16 @@
+const std = @import("std");
 const rl = @import("../rl_import.zig").rl;
 const ecs = @import("entt");
-
 const ct = @import("../components/component_types.zig");
-
-const std = @import("std");
-// const GameCamera = @import("../camera3d.zig");
 
 const ISystem = @import("isystem.zig");
 
 pub const Self = @This();
 
 allocator: std.mem.Allocator,
-// camera: GameCamera,
+
+has_component: bool = false,
+camera_component_entity: ecs.Entity = undefined,
 
 const vtable = ISystem.VTable{
     .init = initImpl,
@@ -23,7 +22,6 @@ pub fn create(allocator: std.mem.Allocator) !*Self {
     const self = try allocator.create(Self);
     self.* = .{
         .allocator = allocator,
-        // .camera = GameCamera.init(),
     };
 
     return self;
@@ -44,35 +42,38 @@ fn initImpl(ptr: *anyopaque, _: *ecs.Registry) void {
 fn updateImpl(ptr: *anyopaque, w: *ecs.Registry, delta: f32) void {
     _ = delta;
     const self: *Self = @ptrCast(@alignCast(ptr));
-    _ = self;
-
-    var view = w.view(.{ ct.Renderable, ct.Transform }, .{});
 
     var camera_view = w.view(.{ct.CameraComponent}, .{});
-    var camera_iter = camera_view.entityIterator();
 
-    if (camera_iter.next()) |camera| {
-        std.debug.print("Isso nao deveria funcionar\n", .{});
-        const camera_component = view.get(ct.CameraComponent, camera);
+    if (!self.has_component) {
+        var camera_iter = camera_view.entityIterator();
 
-        rl.BeginDrawing();
-        defer rl.EndDrawing();
-
-        rl.ClearBackground(rl.RAYWHITE);
-        rl.BeginMode3D(camera_component.camera);
-
-        rl.DrawGrid(400, 1.0);
-
-        var iter = view.entityIterator();
-        while (iter.next()) |e| {
-            const transform = view.getConst(ct.Transform, e);
-            const renderable = view.getConst(ct.Renderable, e);
-
-            rl.DrawCube(transform.position, transform.block_width, transform.block_height, transform.block_width, renderable.color);
+        if (camera_iter.next()) |camera| {
+            self.camera_component_entity = camera;
+            self.has_component = true;
         }
-
-        rl.EndMode3D();
     }
+
+    var view = w.view(.{ ct.Renderable, ct.Transform }, .{});
+    const camera_component = view.get(ct.CameraComponent, self.camera_component_entity);
+
+    rl.BeginDrawing();
+    defer rl.EndDrawing();
+
+    rl.ClearBackground(rl.RAYWHITE);
+    rl.BeginMode3D(camera_component.camera);
+
+    rl.DrawGrid(400, 1.0);
+
+    var iter = view.entityIterator();
+    while (iter.next()) |e| {
+        const transform = view.getConst(ct.Transform, e);
+        const renderable = view.getConst(ct.Renderable, e);
+
+        rl.DrawCube(transform.position, transform.block_width, transform.block_height, transform.block_width, renderable.color);
+    }
+
+    rl.EndMode3D();
 }
 
 fn deinitImpl(ptr: *anyopaque) void {

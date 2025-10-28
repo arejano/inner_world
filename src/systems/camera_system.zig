@@ -32,8 +32,9 @@ pub fn system(self: *Self) ISystem {
 }
 
 fn initImpl(_: *anyopaque, world: *ecs.Registry) void {
+    std.debug.print("[CameraSystem] init\n", .{});
+
     create_camera.create_camera(world);
-    std.debug.print("[MovementSystem] init\n", .{});
 }
 
 fn updateImpl(_: *anyopaque, _: *ecs.Registry, _: f32) void {}
