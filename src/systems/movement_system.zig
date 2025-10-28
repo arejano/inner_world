@@ -23,22 +23,15 @@ pub fn create(allocator: std.mem.Allocator) !*Self {
 }
 
 pub fn system(self: *Self) ISystem {
-    // const vtable: ISystem.VTable = .{
-    //     //
-    //     .deinit = deinitImpl,
-    //     .init = initImpl,
-    //     .update = updateImpl,
-    // };
     return .{
         .ctx = self,
         .vtable = &vtable,
     };
 }
 
-fn initImpl(ptr: *anyopaque) void {
+fn initImpl(ptr: *anyopaque, _: *ecs.Registry) void {
     const self: *Self = @ptrCast(@alignCast(ptr));
     _ = self;
-    // Aqui poderíamos carregar entidades ou componentes.
     std.debug.print("[MovementSystem] init\n", .{});
 }
 

@@ -45,3 +45,9 @@ pub fn deinit(self: *Self) void {
     self.systems.deinit();
     self.lookup.deinit();
 }
+
+pub fn start(self: *Self, world: *ecs.Registry) void {
+    for (self.systems.items) |*sys| {
+        sys.init(world);
+    }
+}

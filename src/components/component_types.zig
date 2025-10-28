@@ -20,3 +20,19 @@ pub const Player = struct {
     death: bool = false,
     life: f32 = 1000.0,
 };
+
+pub const CameraComponent = struct {
+    camera: rl.Camera3D,
+    distance: f32,
+    height: f32,
+    yaw: f32,
+    pitch: f32,
+    min_pitch: f32,
+    max_pitch: f32,
+    mouse_sensitive: f32 = 0.003,
+    soulder_offset: f32 = 0.6,
+    mode: c_int = rl.CAMERA_FREE,
+    zoom_speed: f32 = 0.8,
+    max_zoom: f32 = 40,
+    min_zoom: f32 = 1,
+};

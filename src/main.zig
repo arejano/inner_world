@@ -2,16 +2,6 @@ const std = @import("std");
 const rl_3d_learn = @import("rl_3d_learn");
 
 const rl = @import("rl_import.zig").rl;
-const ecs = @import("entt");
-
-const player_factory = @import("entities/player_factory.zig");
-
-const ct = @import("components/component_types.zig");
-
-// const RenderSystem = @import("systems/render_system.zig");
-
-var camera = @import("camera3d.zig").init();
-// var world: ecs.Registry = undefined;
 
 const Game = @import("game.zig");
 
@@ -41,16 +31,6 @@ pub fn main() !void {
         const dt = rl.GetFrameTime();
         game.update(dt);
 
-        rl.BeginDrawing();
-        defer rl.EndDrawing();
-
-        rl.ClearBackground(rl.RAYWHITE);
-        rl.BeginMode3D(camera.camera);
-
         game.render(dt);
-
-        rl.DrawGrid(40, 1.0);
-
-        rl.EndMode3D();
     }
 }
