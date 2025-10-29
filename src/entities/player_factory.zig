@@ -16,6 +16,7 @@ pub fn create_entity_player(world: *ecs.Registry) void {
     world.add(entity, ctypes.Renderable{ .color = rl.RED, .mesh = undefined });
     world.add(entity, ctypes.KeyboardController{});
     world.add(entity, ctypes.MouseController{});
-    world.add(entity, ctypes.MovementState{ .state = .idle });
+    world.add(entity, ctypes.ActionState{ .locomotion = .idle, .interaction = .none, .combat = .none });
     world.add(entity, ctypes.Direction{ .x = 0, .y = 0, .z = 0 });
+    world.add(entity, ctypes.Gravity{ .x = 0, .y = 0.98, .z = 0 });
 }

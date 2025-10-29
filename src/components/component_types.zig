@@ -13,8 +13,9 @@ pub const Renderable = struct {
     mesh: rl.Mesh = undefined,
 };
 
-pub const Velocity = rl.Vector3;
-pub const Direction = rl.Vector3;
+pub const Velocity = struct { x: f32, y: f32, z: f32 };
+pub const Direction = struct { x: f32, y: f32, z: f32 };
+pub const Gravity = struct { x: f32, y: f32, z: f32 };
 
 pub const Player = struct {
     name: []const u8 = "player_sem_nome",
@@ -45,30 +46,45 @@ pub const Hidden = struct {};
 pub const KeyboardController = struct {};
 pub const MouseController = struct {};
 
-pub const MovementState = struct { state: MoveState };
-pub const MoveState = enum {
+pub const ActionState = struct {
+    locomotion: Locomotion,
+    combat: Combat,
+    interaction: Interaction,
+};
+
+pub const Locomotion = enum {
     idle,
     walk,
     run,
     sprint,
     jump,
     fall,
-    land,
-    crouch,
-    crawl,
+    land, //solo??? arrastando??
+    crouch, //agachar
     climb,
     swim,
     dash,
     roll,
+    slide, //deslizar
+    glide, //planar
+};
+
+pub const Combat = enum {
+    none,
     attack_light,
     attack_heavy,
     block,
     parry,
     stagger,
     death,
-    interact,
-    cast,
     evade,
-    slide,
-    glide,
+    cast,
+};
+
+pub const Interaction = enum {
+    none,
+    interact,
+    pickup,
+    talk,
+    open_door,
 };
