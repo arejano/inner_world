@@ -70,10 +70,21 @@ fn updateImpl(ptr: *anyopaque, w: *ecs.Registry, delta: f32) void {
         const transform = view.getConst(ct.Transform, e);
         const renderable = view.getConst(ct.Renderable, e);
 
-        rl.DrawCube(transform.position, transform.block_width, transform.block_height, transform.block_width, renderable.color);
+        if (renderable.has_model) {
+            std.debug.print("meshCount = {d}\n", .{renderable.mesh.meshCount});
+            rl.DrawModel(renderable.mesh, transform.position, 2, rl.WHITE);
+            rl.DrawSphere(transform.position, 0.2, rl.RED);
+            const to_x: rl.Vector3 = .{ .x = 0, .y = 1, .z = 0 };
+            const scale: rl.Vector3 = .{ .x = 1, .y = 1, .z = 1 };
+            rl.DrawModelEx(renderable.mesh, transform.position, to_x, 0.0, scale, rl.WHITE);
+        } else {
+            rl.DrawCube(transform.position, transform.block_width, transform.block_height, transform.block_width, renderable.color);
+        }
     }
 
     rl.EndMode3D();
+
+    rl.DrawFPS(10, 10);
 }
 
 fn deinitImpl(ptr: *anyopaque) void {

@@ -10,7 +10,8 @@ pub const Transform = struct {
 
 pub const Renderable = struct {
     color: rl.Color,
-    mesh: rl.Mesh = undefined,
+    mesh: rl.Model = undefined,
+    has_model: bool = false,
 };
 
 pub const Velocity = struct { x: f32, y: f32, z: f32 };
@@ -75,7 +76,7 @@ pub const Combat = enum {
     attack_heavy,
     block,
     parry,
-    stagger,
+    stagger, //cambalear
     death,
     evade,
     cast,

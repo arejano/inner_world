@@ -13,7 +13,7 @@ pub fn create_entity_player(world: *ecs.Registry) void {
     world.add(entity, ctypes.Velocity{ .x = 5, .y = 5, .z = 5 });
     world.add(entity, ctypes.Player{});
     world.add(entity, ctypes.CameraTarget{});
-    world.add(entity, ctypes.Renderable{ .color = rl.RED, .mesh = undefined });
+    world.add(entity, ctypes.Renderable{ .color = rl.RED, .mesh = rl.LoadModel("../3d_models/hero.glb"), .has_model = true });
     world.add(entity, ctypes.KeyboardController{});
     world.add(entity, ctypes.MouseController{});
     world.add(entity, ctypes.ActionState{ .locomotion = .idle, .interaction = .none, .combat = .none });

@@ -19,6 +19,14 @@ pub fn vec2Scale(a: rl.Vector2, s: f32) rl.Vector2 {
     };
 }
 
+pub fn vec3Scale(a: rl.Vector3, s: f32) rl.Vector3 {
+    return .{
+        .x = a.x * s,
+        .y = a.y * s,
+        .z = a.z * s,
+    };
+}
+
 pub fn vec2BDirection(a: rl.Vector2, b: rl.Vector2, speed: f32) rl.Vector2 {
     if (b.x > a.x) {
         return vec2Opos(.{ .x = speed, .y = 0 });

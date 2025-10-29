@@ -73,7 +73,7 @@ pub fn update(self: *Self, dt: f32) void {
 }
 
 pub fn render(self: *Self, dt: f32) void {
-    std.debug.print("Game:Render\n", .{});
+    // std.debug.print("Game:Render\n", .{});
     self.render_system_manager.updateAll(&self.world, dt);
 }
 

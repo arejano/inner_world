@@ -1,5 +1,6 @@
 const std = @import("std");
 const ecs = @import("entt");
+const ct = @import("../components/component_types.zig");
 
 const ISystem = @import("isystem.zig");
 
@@ -29,16 +30,17 @@ pub fn system(self: *Self) ISystem {
     };
 }
 
-fn initImpl(ptr: *anyopaque, _: *ecs.Registry) void {
-    const self: *Self = @ptrCast(@alignCast(ptr));
-    _ = self;
-    std.debug.print("[MovementSystem] init\n", .{});
+fn initImpl(_: *anyopaque, _: *ecs.Registry) void {
+    // var actions_view = w.basicView(ct.ActionState);
+    // var actions_iter = actions_view.entityIterator();
+
+    // if (actions_iter.next()) |e| {
+    // }
 }
 
-fn updateImpl(ptr: *anyopaque, _: *ecs.Registry, delta: f32) void {
-    _ = ptr;
+fn updateImpl(_: *anyopaque, _: *ecs.Registry, _: f32) void {
 
-    std.debug.print("[MovementSystem] delta_time: {d}\n", .{delta});
+    // std.debug.print("[MovementSystem] delta_time: {d}\n", .{delta});
 }
 
 fn deinitImpl(ptr: *anyopaque) void {
