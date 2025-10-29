@@ -14,6 +14,7 @@ pub const Renderable = struct {
 };
 
 pub const Velocity = rl.Vector3;
+pub const Direction = rl.Vector3;
 
 pub const Player = struct {
     name: []const u8 = "player_sem_nome",
@@ -21,6 +22,8 @@ pub const Player = struct {
     life: f32 = 1000.0,
 };
 
+pub const CameraTarget = struct {};
+pub const Camera = struct {};
 pub const CameraComponent = struct {
     camera: rl.Camera3D,
     distance: f32,
@@ -35,4 +38,37 @@ pub const CameraComponent = struct {
     zoom_speed: f32 = 0.8,
     max_zoom: f32 = 40,
     min_zoom: f32 = 1,
+};
+
+pub const Invisible = struct {};
+pub const Hidden = struct {};
+pub const KeyboardController = struct {};
+pub const MouseController = struct {};
+
+pub const MovementState = struct { state: MoveState };
+pub const MoveState = enum {
+    idle,
+    walk,
+    run,
+    sprint,
+    jump,
+    fall,
+    land,
+    crouch,
+    crawl,
+    climb,
+    swim,
+    dash,
+    roll,
+    attack_light,
+    attack_heavy,
+    block,
+    parry,
+    stagger,
+    death,
+    interact,
+    cast,
+    evade,
+    slide,
+    glide,
 };

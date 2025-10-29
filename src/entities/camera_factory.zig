@@ -22,4 +22,5 @@ pub fn create_camera(world: *ecs.Registry) void {
         .min_pitch = -0.4,
         .max_pitch = 4.0,
     });
+    world.add(entity, ctypes.Camera);
 }

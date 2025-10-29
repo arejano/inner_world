@@ -36,35 +36,43 @@ pub fn system(self: *Self) ISystem {
 fn initImpl(_: *anyopaque, _: *ecs.Registry) void {}
 
 fn updateImpl(_: *anyopaque, w: *ecs.Registry, _: f32) void {
-    var view = w.view(.{ ct.Player, ct.CameraComponent }, .{});
-    var view_iter = view.entityIterator();
+    // Camera
+    var camera_view = w.basicView(ct.CameraComponent);
+    var camera_iter = camera_view.entityIterator();
 
-    const target: rl.Vector3 = undefined;
+    var camera_cp: ?*ct.CameraComponent = null;
+    while (camera_iter.next()) |e| {
+        camera_cp = camera_view.get(e);
+    }
 
-    while (view_iter.next()) |entity| {
-        var camera = view.get(ct.CameraComponent, entity);
+    // Player
+    var player_view = w.view(.{ ct.CameraTarget, ct.Transform }, .{});
+    var player_iter = player_view.entityIterator();
 
+    var player_tf: ?*ct.Transform = null;
+    while (player_iter.next()) |e| {
+        player_tf = player_view.get(ct.Transform, e);
+    }
+
+    if (camera_cp) |camera| {
         const whell = rl.GetMouseWheelMove();
         camera.distance -= whell * camera.zoom_speed;
-        if (camera.distance < camera.min_zoom) {
-            camera.distance = camera.min_zoom;
-        }
-        if (camera.distance > camera.max_zoom) {
-            camera.*.distance = camera.max_zoom;
-        }
+        if (camera.distance < camera.min_zoom) camera.distance = camera.min_zoom;
+        if (camera.distance > camera.max_zoom) camera.distance = camera.max_zoom;
 
         if (rl.IsMouseButtonDown(rl.MOUSE_BUTTON_RIGHT)) {
             const delta = rl.GetMouseDelta();
 
-            camera.*.yaw -= delta.x * 0.003;
-            camera.*.pitch -= delta.y * 0.003;
+            camera.yaw -= delta.x * 0.003;
+            camera.pitch -= delta.y * 0.003;
 
-            if (camera.pitch < -1.2) {
-                camera.pitch = -1.2;
-            }
-            if (camera.pitch > 1.2) {
-                camera.pitch = 1.2;
-            }
+            if (camera.pitch < -1.2) camera.pitch = -1.2;
+            if (camera.pitch > 1.2) camera.pitch = 1.2;
+        }
+
+        var target = rl.Vector3Zero();
+        if (player_tf) |player| {
+            target = player.position;
         }
 
         const offset = rl.Vector3{
@@ -73,8 +81,8 @@ fn updateImpl(_: *anyopaque, w: *ecs.Registry, _: f32) void {
             .z = @cos(camera.yaw) * @cos(camera.pitch) * camera.distance,
         };
 
-        camera.*.camera.position = vec_math.vec3Add(target, offset);
-        // camera.camera.target = target;
+        camera.camera.position = vec_math.vec3Add(target, offset);
+        camera.camera.target = target;
     }
 }
 

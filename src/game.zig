@@ -13,6 +13,7 @@ const CameraSystem = @import("systems/camera_system.zig");
 const MovementSystem = @import("systems/movement_system.zig");
 const RenderSystem = @import("systems/render_system.zig");
 const MouseInputSystem = @import("systems/mouseinput_system.zig");
+const KeyboarInputSystem = @import("systems/keyboard_input.zig");
 
 const Self = @This();
 
@@ -38,18 +39,21 @@ pub fn init(allocator: std.mem.Allocator) !Self {
     player_factory.create_entity_player(&world);
 
     //Start Normal Systems
-    // const move_system = try MovementSystem.create(allocator);
-    // try system_manager.add(move_system.system(), "MovementSystem");
+    const move_system = try MovementSystem.create(allocator);
+    try system_manager.add(move_system.system(), "MovementSystem");
 
     const camera_system = try CameraSystem.create(allocator);
-    try system_manager.add(camera_system.system(), "MovementSystem");
+    try system_manager.add(camera_system.system(), "CameraSystem");
+
+    const mouseinput_system = try MouseInputSystem.create(allocator);
+    try system_manager.add(mouseinput_system.system(), "MouseSystem");
+
+    const keyboard_input = try KeyboarInputSystem.create(allocator);
+    try system_manager.add(keyboard_input.system(), "KeyaboardSystem");
 
     //Start Render Systems
     const render_system = try RenderSystem.create(allocator);
     try render_system_manager.add(render_system.system(), "RenderSystem");
-
-    const mouseinput_system = try MouseInputSystem.create(allocator);
-    try system_manager.add(mouseinput_system.system(), "MouseSystem");
 
     system_manager.start(&world);
 
