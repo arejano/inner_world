@@ -26,7 +26,7 @@ pub fn init(allocator: std.mem.Allocator) std.mem.Allocator.Error!Self {
     return .{
         //
         .allocator = allocator,
-        .models = std.StringHashMap(ModelStruct).init(allocator),
+        .models = models,
     };
 }
 
@@ -41,10 +41,10 @@ pub fn getModel(self: *Self, key: []const u8) ?ModelStruct {
 pub fn deinit(self: *Self) void {
     std.debug.print("[ModelManager]:Deinit\n", .{});
 
-    // var models_iter = self.models.iterator();
-    // while (models_iter.next()) |item| {
-    //     rl.UnloadModel(item.value_ptr.model);
-    // }
+    var models_iter = self.models.iterator();
+    while (models_iter.next()) |item| {
+        rl.UnloadModel(item.value_ptr.model);
+    }
     self.models.clearAndFree();
     self.models.deinit();
 }

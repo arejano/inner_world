@@ -61,13 +61,14 @@ fn updateImpl(_: *anyopaque, w: *ecs.Registry, _: f32) void {
         if (camera.distance > camera.max_zoom) camera.distance = camera.max_zoom;
 
         if (rl.IsMouseButtonDown(rl.MOUSE_BUTTON_RIGHT)) {
+            std.debug.print("Menor que zero\n", .{});
             const delta = rl.GetMouseDelta();
 
             camera.yaw -= delta.x * 0.003;
             camera.pitch -= delta.y * 0.003;
 
-            if (camera.pitch < -1.2) camera.pitch = -1.2;
-            if (camera.pitch > 1.2) camera.pitch = 1.2;
+            // if (camera.pitch < -1.2) camera.pitch = -1.2;
+            // if (camera.pitch > 1.2) camera.pitch = 1.2;
         }
 
         var target = rl.Vector3Zero();
@@ -82,12 +83,13 @@ fn updateImpl(_: *anyopaque, w: *ecs.Registry, _: f32) void {
         };
 
         camera.camera.position = vec_math.vec3Add(target, offset);
-        camera.camera.target = target;
+
+        // camera.camera.target = target;
     }
 }
 
 fn deinitImpl(ptr: *anyopaque) void {
     const self: *Self = @ptrCast(@alignCast(ptr));
-    std.debug.print("[RenderSystem] deinit\n", .{});
+    std.debug.print("[MouseInput:deinit]\n", .{});
     self.allocator.destroy(self);
 }

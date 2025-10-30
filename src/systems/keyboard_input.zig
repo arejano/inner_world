@@ -145,6 +145,6 @@ fn updateImpl(ptr: *anyopaque, w: *ecs.Registry, delta: f32) void {
 
 fn deinitImpl(ptr: *anyopaque) void {
     const self: *Self = @ptrCast(@alignCast(ptr));
-    std.debug.print("[RenderSystem] deinit\n", .{});
+    std.debug.print("[KeyboardInput:deinit]\n", .{});
     self.allocator.destroy(self);
 }

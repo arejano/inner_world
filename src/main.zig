@@ -19,6 +19,7 @@ pub fn main() !void {
     const allocator = gpa.allocator();
 
     var game = try Game.init(allocator);
+
     defer {
         game.deinit();
     }

@@ -29,8 +29,8 @@ factory_manager: FactoryManager,
 pub fn init(allocator: std.mem.Allocator) !Self {
     var world = ecs.Registry.init(allocator);
 
-    var model_manager = try ModelManager.init(allocator);
-    const factory_manager = try FactoryManager.init(allocator, &model_manager);
+    const model_manager = try ModelManager.init(allocator);
+    const factory_manager = try FactoryManager.init(allocator);
 
     //System Manager
     var system_manager = SystemManager.init(allocator);
@@ -39,9 +39,6 @@ pub fn init(allocator: std.mem.Allocator) !Self {
     // const resource_manager = try ResourceManager.init(allocator);
 
     var render_system_manager = SystemManager.init(allocator);
-
-    //Crate Entities
-    // player_factory.create_entity_player(&world);
 
     //Start Normal Systems
     const move_system = try MovementSystem.create(allocator);
@@ -75,23 +72,19 @@ pub fn init(allocator: std.mem.Allocator) !Self {
 
 pub fn update(self: *Self, dt: f32) void {
     if (rl.IsKeyPressed(rl.KEY_N)) {
-        // self.factory_manager.add_player(&self.world);
-        // player_factory.create_entity_player(&self.world);
-        self.factory_manager.teste_model_manager();
+        self.factory_manager.add_player(&self.world, &self.model_manager);
     }
-    // std.debug.print("Game:Update\n", .{});
     self.system_manager.updateAll(&self.world, dt);
 }
 
 pub fn render(self: *Self, dt: f32) void {
-    // std.debug.print("Game:Render\n", .{});
     self.render_system_manager.updateAll(&self.world, dt);
 }
 
 pub fn deinit(self: *Self) void {
+    self.model_manager.deinit();
     self.system_manager.deinit();
     self.render_system_manager.deinit();
     // self.resource_manager.deinit();
     self.world.deinit();
-    self.model_manager.deinit();
 }

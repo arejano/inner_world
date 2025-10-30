@@ -38,6 +38,7 @@ pub fn updateAll(self: *Self, world: *ecs.Registry, delta: f32) void {
 }
 
 pub fn deinit(self: *Self) void {
+    std.debug.print("[SystemManager:deinit]", .{});
     for (self.systems.items) |*sys| {
         sys.deinit();
     }

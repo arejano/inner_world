@@ -8,9 +8,12 @@ pub const ModelStruct = struct {
     model: rl.Model = undefined,
 };
 
-const t: ModelStruct = .{ .name = "teste", .path = "resources/teste.obj", .texture_path = "resources/teste.png" };
+const t: ModelStruct = .{
+    .name = "player",
+    .path = "resources/rubber_duck/RubberDuck_LOD0.obj",
+    .texture_path = "resources/teste.png",
+};
 
 pub const model_list: [1]ModelStruct = .{
-    //
     t,
 };
