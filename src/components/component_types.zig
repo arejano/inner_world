@@ -8,9 +8,13 @@ pub const Transform = struct {
     block_height: f32 = 4,
 };
 
+pub const RenderSystemConfig = struct {
+    draw_bounds: bool = false,
+};
+
 pub const Renderable = struct {
     color: rl.Color,
-    mesh: rl.Model = undefined,
+    model: rl.Model = undefined,
     has_model: bool = false,
 };
 
@@ -28,7 +32,7 @@ pub const CameraTarget = struct {};
 pub const Camera = struct {};
 pub const CameraComponent = struct {
     camera: rl.Camera3D,
-    distance: f32,
+    distance: f32 = 300,
     height: f32,
     yaw: f32,
     pitch: f32,
@@ -38,7 +42,7 @@ pub const CameraComponent = struct {
     soulder_offset: f32 = 0.6,
     mode: c_int = rl.CAMERA_FREE,
     zoom_speed: f32 = 0.8,
-    max_zoom: f32 = 40,
+    max_zoom: f32 = 400,
     min_zoom: f32 = 1,
 };
 

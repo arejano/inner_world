@@ -6,6 +6,10 @@ const rl = @import("rl_import.zig").rl;
 const Game = @import("game.zig");
 
 pub fn main() !void {
+    rl.InitWindow(800, 600, "Inner World");
+
+    defer rl.CloseWindow();
+
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     defer {
         _ = gpa.detectLeaks();
@@ -18,10 +22,6 @@ pub fn main() !void {
     defer {
         game.deinit();
     }
-
-    rl.InitWindow(800, 600, "Raylib_Learn");
-
-    defer rl.CloseWindow();
 
     rl.SetWindowMonitor(1);
     rl.SetTargetFPS(60);

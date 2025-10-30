@@ -5,6 +5,7 @@ const rl = @import("../rl_import.zig").rl;
 const Self = @This();
 
 pub fn create_camera(world: *ecs.Registry) void {
+    //Camera
     const entity = world.create();
     world.add(entity, ctypes.CameraComponent{
         .camera = .{
@@ -18,9 +19,15 @@ pub fn create_camera(world: *ecs.Registry) void {
         .yaw = 0.2,
         .pitch = 0.2,
         .height = 2.0,
-        .distance = 15.0,
+        .distance = 100.0,
         .min_pitch = -0.4,
         .max_pitch = 4.0,
     });
     world.add(entity, ctypes.Camera);
+
+    //RenderConfig
+    const entity_config = world.create();
+    world.add(entity_config, ctypes.RenderSystemConfig{
+        .draw_bounds = true,
+    });
 }

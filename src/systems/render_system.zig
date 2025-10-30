@@ -39,9 +39,15 @@ fn initImpl(ptr: *anyopaque, _: *ecs.Registry) void {
     _ = self;
 }
 
-fn updateImpl(ptr: *anyopaque, w: *ecs.Registry, delta: f32) void {
-    _ = delta;
+fn updateImpl(ptr: *anyopaque, w: *ecs.Registry, _: f32) void {
     const self: *Self = @ptrCast(@alignCast(ptr));
+
+    var view_config = w.basicView(ct.RenderSystemConfig);
+    var view_config_iter = view_config.entityIterator();
+    var config: *ct.RenderSystemConfig = undefined;
+    if (view_config_iter.next()) |c| {
+        config = view_config.get(c);
+    }
 
     var camera_view = w.view(.{ct.CameraComponent}, .{});
 
@@ -71,14 +77,13 @@ fn updateImpl(ptr: *anyopaque, w: *ecs.Registry, delta: f32) void {
         const renderable = view.getConst(ct.Renderable, e);
 
         if (renderable.has_model) {
-            std.debug.print("meshCount = {d}\n", .{renderable.mesh.meshCount});
-            rl.DrawModel(renderable.mesh, transform.position, 2, rl.WHITE);
-            rl.DrawSphere(transform.position, 0.2, rl.RED);
-            const to_x: rl.Vector3 = .{ .x = 0, .y = 1, .z = 0 };
-            const scale: rl.Vector3 = .{ .x = 1, .y = 1, .z = 1 };
-            rl.DrawModelEx(renderable.mesh, transform.position, to_x, 0.0, scale, rl.WHITE);
+            rl.DrawModelWires(renderable.model, transform.position, 1, rl.RED);
+            if (config.draw_bounds) {
+                const bounds = rl.GetMeshBoundingBox(renderable.model.meshes[0]);
+                rl.DrawBoundingBox(bounds, rl.GREEN);
+            }
         } else {
-            rl.DrawCube(transform.position, transform.block_width, transform.block_height, transform.block_width, renderable.color);
+            rl.DrawCubeWires(transform.position, transform.block_width, transform.block_height, transform.block_width, renderable.color);
         }
     }
 

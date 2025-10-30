@@ -4,9 +4,10 @@ const ecs = @import("entt");
 
 const player_factory = @import("entities/player_factory.zig");
 
-const GameCamera = @import("camera3d.zig");
 const SystemManager = @import("systems/system_manager.zig");
 // const ResourceManager = @import("resources_manager.zig");
+const ModelManager = @import("model_manager.zig");
+const FactoryManager = @import("factory_manager.zig");
 
 //Systems
 const CameraSystem = @import("systems/camera_system.zig");
@@ -18,15 +19,19 @@ const KeyboarInputSystem = @import("systems/keyboard_input.zig");
 const Self = @This();
 
 allocator: std.mem.Allocator,
-camera: GameCamera,
 world: ecs.Registry,
 system_manager: SystemManager,
 render_system_manager: SystemManager,
 // resource_manager: ResourceManager,
+model_manager: ModelManager,
+factory_manager: FactoryManager,
 
 pub fn init(allocator: std.mem.Allocator) !Self {
-    const camera = GameCamera.init();
     var world = ecs.Registry.init(allocator);
+
+    var model_manager = try ModelManager.init(allocator);
+    const factory_manager = try FactoryManager.init(allocator, &model_manager);
+
     //System Manager
     var system_manager = SystemManager.init(allocator);
 
@@ -36,7 +41,7 @@ pub fn init(allocator: std.mem.Allocator) !Self {
     var render_system_manager = SystemManager.init(allocator);
 
     //Crate Entities
-    player_factory.create_entity_player(&world);
+    // player_factory.create_entity_player(&world);
 
     //Start Normal Systems
     const move_system = try MovementSystem.create(allocator);
@@ -59,15 +64,21 @@ pub fn init(allocator: std.mem.Allocator) !Self {
 
     return .{
         .allocator = allocator,
-        .camera = camera,
         .world = world,
         .system_manager = system_manager,
         .render_system_manager = render_system_manager,
         // .resource_manager = resource_manager,
+        .model_manager = model_manager,
+        .factory_manager = factory_manager,
     };
 }
 
 pub fn update(self: *Self, dt: f32) void {
+    if (rl.IsKeyPressed(rl.KEY_N)) {
+        // self.factory_manager.add_player(&self.world);
+        // player_factory.create_entity_player(&self.world);
+        self.factory_manager.teste_model_manager();
+    }
     // std.debug.print("Game:Update\n", .{});
     self.system_manager.updateAll(&self.world, dt);
 }
@@ -82,4 +93,5 @@ pub fn deinit(self: *Self) void {
     self.render_system_manager.deinit();
     // self.resource_manager.deinit();
     self.world.deinit();
+    self.model_manager.deinit();
 }
