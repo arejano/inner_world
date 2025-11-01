@@ -61,7 +61,6 @@ fn updateImpl(_: *anyopaque, w: *ecs.Registry, _: f32) void {
         if (camera.distance > camera.max_zoom) camera.distance = camera.max_zoom;
 
         if (rl.IsMouseButtonDown(rl.MOUSE_BUTTON_RIGHT)) {
-            std.debug.print("Menor que zero\n", .{});
             const delta = rl.GetMouseDelta();
 
             camera.yaw -= delta.x * 0.003;

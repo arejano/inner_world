@@ -4,6 +4,10 @@ const ecs = @import("entt");
 
 const player_factory = @import("entities/player_factory.zig");
 
+const check_keys = @import("rl_import.zig").anyKeyInGroupIsPressed;
+
+const GameKeys = @import("game_keys.zig");
+
 const SystemManager = @import("systems/system_manager.zig");
 // const ResourceManager = @import("resources_manager.zig");
 const ModelManager = @import("model_manager.zig");
@@ -16,7 +20,24 @@ const RenderSystem = @import("systems/render_system.zig");
 const MouseInputSystem = @import("systems/mouseinput_system.zig");
 const KeyboarInputSystem = @import("systems/keyboard_input.zig");
 
+const GameMode = enum {
+    Debug,
+    Editor,
+    Play,
+};
+
+const GameState = enum {
+    Starting,
+    Loading,
+    Menu,
+    Running,
+    Paused,
+};
+
 const Self = @This();
+
+game_state: GameState = .Starting,
+game_mode: GameMode = .Debug,
 
 allocator: std.mem.Allocator,
 world: ecs.Registry,
@@ -70,11 +91,32 @@ pub fn init(allocator: std.mem.Allocator) !Self {
     };
 }
 
+pub fn start(self: *Self) void {
+    self.game_state = .Running;
+    self.factory_manager.start(&self.world);
+}
+
+pub fn menu_keys(self: *Self) void {
+    if (check_keys(GameKeys.menu_keys)) {
+        if (rl.IsKeyPressed(rl.KEY_F1)) {
+            if (self.game_state == .Paused) {
+                self.game_state = .Running;
+            }
+            if (self.game_state == .Running) {
+                self.game_state = .Paused;
+            }
+        }
+    }
+}
+
 pub fn update(self: *Self, dt: f32) void {
     if (rl.IsKeyPressed(rl.KEY_N)) {
         self.factory_manager.add_player(&self.world, &self.model_manager);
     }
-    self.system_manager.updateAll(&self.world, dt);
+
+    if (self.game_state == .Running) {
+        self.system_manager.updateAll(&self.world, dt);
+    }
 }
 
 pub fn render(self: *Self, dt: f32) void {

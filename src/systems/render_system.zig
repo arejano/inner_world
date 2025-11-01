@@ -60,6 +60,8 @@ fn updateImpl(ptr: *anyopaque, w: *ecs.Registry, _: f32) void {
         }
     }
 
+    var debug_view = w.view(.{ ct.RenderableBlock, ct.Transform }, .{});
+
     var view = w.view(.{ ct.Renderable, ct.Transform }, .{});
     const camera_component = view.get(ct.CameraComponent, self.camera_component_entity);
 
@@ -71,6 +73,16 @@ fn updateImpl(ptr: *anyopaque, w: *ecs.Registry, _: f32) void {
 
     rl.DrawGrid(400, 1.0);
 
+    //Debug Entitites
+    var debug_iter = debug_view.entityIterator();
+    while (debug_iter.next()) |e| {
+        const tm = view.getConst(ct.Transform, e);
+        const block = view.getConst(ct.RenderableBlock, e);
+
+        rl.DrawCube(tm.position, block.width, block.height, block.length, block.color);
+    }
+
+    //Normal Entities
     var iter = view.entityIterator();
     while (iter.next()) |e| {
         const transform = view.getConst(ct.Transform, e);

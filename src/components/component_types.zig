@@ -18,6 +18,13 @@ pub const Renderable = struct {
     has_model: bool = false,
 };
 
+pub const RenderableBlock = struct {
+    color: rl.Color,
+    width: f32,
+    height: f32,
+    length: f32,
+};
+
 pub const Velocity = struct { x: f32, y: f32, z: f32 };
 pub const Direction = struct { x: f32, y: f32, z: f32 };
 pub const Gravity = struct { x: f32, y: f32, z: f32 };
